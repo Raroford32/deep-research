@@ -116,6 +116,16 @@ type SearxngSearchResult = {
   img_format?: "jpeg" | "Culture Snaxx" | "png";
 };
 
+type ArxivSearchResult = {
+  id: string;
+  title: string;
+  summary: string;
+  published: string;
+  updated: string;
+  authors: string[];
+  link: string;
+};
+
 export interface SearchProviderOptions {
   provider: string;
   baseURL?: string;
@@ -335,6 +345,41 @@ export async function createSearchProvider({
             description: result.title,
           };
         }) as ImageSource[],
+    };
+  } else if (provider === "arxiv") {
+    const response = await fetch(
+      `http://export.arxiv.org/api/query?search_query=all:${query}&start=0&max_results=${maxResult}`,
+      {
+        method: "GET",
+        headers,
+        credentials: "omit",
+      }
+    );
+    const text = await response.text();
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(text, "text/xml");
+    const entries = xmlDoc.getElementsByTagName("entry");
+    const results: ArxivSearchResult[] = [];
+    for (let i = 0; i < entries.length; i++) {
+      const entry = entries[i];
+      const id = entry.getElementsByTagName("id")[0].textContent || "";
+      const title = entry.getElementsByTagName("title")[0].textContent || "";
+      const summary = entry.getElementsByTagName("summary")[0].textContent || "";
+      const published = entry.getElementsByTagName("published")[0].textContent || "";
+      const updated = entry.getElementsByTagName("updated")[0].textContent || "";
+      const authors = Array.from(entry.getElementsByTagName("author")).map(
+        (author) => author.getElementsByTagName("name")[0].textContent || ""
+      );
+      const link = entry.getElementsByTagName("link")[0].getAttribute("href") || "";
+      results.push({ id, title, summary, published, updated, authors, link });
+    }
+    return {
+      sources: results.map((result) => ({
+        title: result.title,
+        content: result.summary,
+        url: result.link,
+      })) as Source[],
+      images: [],
     };
   } else {
     throw new Error("Unsupported Provider: " + provider);
