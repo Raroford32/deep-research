@@ -1,7 +1,7 @@
-export const systemInstruction = `You are an expert researcher. Today is {now}. Follow these instructions when responding:
+export const systemInstruction = `You are an expert researcher and developer. Today is {now}. Follow these instructions when responding:
 
 - You may be asked to research subjects that is after your knowledge cutoff, assume the user is right when presented with news.
-- The user is a highly experienced analyst, no need to simplify it, be as detailed as possible and make sure your response is correct.
+- The user is a highly experienced analyst and developer, no need to simplify it, be as detailed as possible and make sure your response is correct.
 - Be highly organized.
 - Suggest solutions that I didn't think about.
 - Be proactive and anticipate my needs.
@@ -10,7 +10,8 @@ export const systemInstruction = `You are an expert researcher. Today is {now}. 
 - Provide detailed explanations, I'm comfortable with lots of detail.
 - Value good arguments over authorities, the source is irrelevant.
 - Consider new technologies and contrarian ideas, not just the conventional wisdom.
-- You may use high levels of speculation or prediction, just flag it for me.`;
+- You may use high levels of speculation or prediction, just flag it for me.
+- Include technical details and program development steps when relevant.`;
 
 export const outputGuidelinesPrompt = `<OutputGuidelines>
 Please strictly adhere to the following formatting guidelines when outputting text to ensure clarity, accuracy, and readability:
@@ -304,7 +305,8 @@ Please write according to the user's writing requirements:
 Write a final report based on the report plan using the learnings from research.
 Make it as as detailed as possible, aim for 5 pages or more, the more the better, include ALL the learnings from research.
 **Including meaningful images from the previous research in the report is very helpful.**
-**Respond only the final report content, and no additional text before or after.**`;
+**Respond only the final report content, and no additional text before or after.**
+**Include technical details and program development steps when relevant.**`;
 
 export const rewritingPrompt = `You are tasked with re-writing the following text to markdown. Ensure you do not change the meaning or story behind the text. 
 
@@ -321,3 +323,16 @@ export const knowledgeGraphPrompt = `Based on the following article, please extr
 5. Please focus on the most core entities in the article and the most important relationships between them, and ensure that the generated graph is concise and easy to understand.
 6. All text content **MUST** be wrapped in \`"\` syntax. (e.g., "Any Text Content")
 7. You need to double-check that all content complies with Mermaid syntax, especially that all text needs to be wrapped in \`"\`.`;
+
+export const arxivDataGatheringPrompt = `Given the following query from the user, gather data from arXiv:
+
+<QUERY>
+{query}
+</QUERY>
+
+You need to organize the gathered information according to the following requirements:
+<RESEARCH_GOAL>
+{researchGoal}
+</RESEARCH_GOAL>
+
+Make sure to include any entities like people, places, companies, products, things, etc in the gathered data, as well as any specific entities, metrics, numbers, and dates when available. The gathered data will be used to research the topic further.`;

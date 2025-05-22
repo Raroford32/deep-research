@@ -13,6 +13,7 @@ import {
   finalReportCitationImagePrompt,
   finalReportReferencesPrompt,
   finalReportPrompt,
+  arxivDataGatheringPrompt,
 } from "@/constants/prompts";
 
 export function getSERPQuerySchema() {
@@ -142,4 +143,10 @@ export function writeFinalReportPrompt(
     .replace("{sources}", sources.join("\n"))
     .replace("{images}", imageList.join("\n"))
     .replace("{requirement}", requirement);
+}
+
+export function arxivDataGatheringPrompt(query: string, researchGoal: string) {
+  return arxivDataGatheringPrompt
+    .replace("{query}", query)
+    .replace("{researchGoal}", researchGoal);
 }
